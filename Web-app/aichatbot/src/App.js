@@ -1,14 +1,10 @@
 import React, { useRef, useState } from 'react';
 import './App.css';
 
-// import firebase from 'firebase/app';
-// import 'firebase/firestore';
-// import 'firebase/auth';
-// import 'firebase/analytics';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore"
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { getFirestore, collection, getDocs, addDoc, query, orderBy, limit  } from "firebase/firestore"
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
@@ -23,7 +19,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const firestore = getFirestore();
+const firestore = getFirestore(app);
 const analytics = getAnalytics(app);
 
 
@@ -49,8 +45,8 @@ function App() {
 function SignIn() {
 
   const signInWithGoogle = () => {
-    const provider = new auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider);
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
   }
 
   return (
@@ -64,17 +60,16 @@ function SignIn() {
 
 function SignOut() {
   return auth.currentUser && (
-    <button className="sign-out" onClick={() => auth.signOut()}>Sign Out</button>
+    <button className="sign-out" onClick={() => signOut(auth)}>Sign Out</button>
   )
 }
 
 
-function ChatRoom() {
+async function ChatRoom() {
   const dummy = useRef();
-  const messagesRef = firestore.collection('messages');
-  const query = messagesRef.orderBy('createdAt').limit(25);
-
-  const [messages] = useCollectionData(query, { idField: 'id' });
+  const messagesRef = await getDocs(collection(firestore, "messages"));
+  const q = query(messagesRef, orderBy("createdAt"), limit(25));
+  const [messages] = useCollectionData(q, { idField: 'id' });
 
   const [formValue, setFormValue] = useState('');
 
