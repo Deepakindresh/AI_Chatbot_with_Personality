@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, inital-scale=1.0">
+        <title>Chat with KAT</title>
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+    </head>
+    <body>
+        <div class="container">
+            <div class="chatbox">
+                <div class="col-1">
+                    <div class="msg-row">
+                        <div class="msg-text">
+                            <h2>Kat</h2>
+                            <p>Hi I am Kat Stratford, from 10 things i hate about you.</p>
+                        </div>
+                        <img src="{{ img1 }}" alt="" class="msg-img">
+                    </div>
+
+                    <div class="msg-row msg-row2">
+                        <div class="msg-text">
+                            <h2>Deepakindresh</h2>
+                            <p>Hi</p>
+                        </div>
+                        <img src="{{ img2 }}" alt="" class="msg-img">
+                    </div>
+
+                    <div class="msg-row">
+                        <div class="msg-text">
+                            <h2>Kat</h2>
+                            <p>I am waiting for your text</p>
+                        </div>
+                        <img src="{{ img1 }}" alt="" class="msg-img">
+                    </div>
+
+                    {%for i in range(0, length)%}
+                        {%if i%2==0%}
+                            <div class="msg-row msg-row2">
+                                <div class="msg-text">
+                                        <h2>Deepakindresh</h2>
+                                        <p>{{lst[i]}}</p>
+                                </div>
+                                <img src="{{ img2 }}" alt="" class="msg-img">
+                            </div>
+                        {%else%}
+                            <div class="msg-row">
+                                <div class="msg-text">
+                                        <h2>Kat</h2>
+                                        <p>{{lst[i]}}</p>
+                                </div>
+                                <img src="{{ img1 }}" alt="" class="msg-img">
+                            </div>
+                        {%endif%}
+                    {%endfor%}
+                    
+                    <form action="{{ url_for('messageapi') }}" method="post" style="display:flex;" >
+                        <input type="text" name="inputtext" placeholder="Chat with Kat">
+                        <input type="submit" style="width: 20px; background-color: green; padding-right: 80px;">
+                    </form>
+                </div>
+                <div class="col-2"></div>
+            </div>
+        </div>
+    </body>
+</html>

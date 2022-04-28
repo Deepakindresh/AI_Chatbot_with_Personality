@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import './App.css';
 
 import firebase from 'firebase/app';
@@ -30,6 +30,17 @@ const analytics = firebase.analytics();
 function App() {
 
   const [user] = useAuthState(auth);
+  useEffect(() => {
+
+  fetch("/members").then(
+    res => res.json()
+  ).then(
+    data => {
+      console.log("Data from flask server ",data);
+    }
+  )
+
+  },[])
 
   return (
     <div className="App">
